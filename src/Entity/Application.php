@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ApplicationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,7 +29,14 @@ class Application
     private ?\DateTimeImmutable $applicationDate = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $coverLetter = null;
+    private ?string $jobDescription = null;
+
+    #[ORM\OneToMany(targetEntity: MotivationLetter::class, mappedBy: 'application')]
+    private Collection $motivationLetter;
+
+    public function __construct() {
+        $this->motivationLetter = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -82,15 +91,44 @@ class Application
         return $this;
     }
 
-    public function getCoverLetter(): ?string
+    public function getJobDescription(): ?string
     {
-        return $this->coverLetter;
+        return $this->jobDescription;
     }
 
-    public function setCoverLetter(?string $coverLetter): static
+    public function setJobDescription(?string $jobDescription): static
     {
-        $this->coverLetter = $coverLetter;
+        $this->jobDescription = $jobDescription;
 
         return $this;
     }
+
+    public function getMotivationLetter(): Collection
+    {
+        return $this->motivationLetter;
+    }
+
+    public function addMotivationLetter(MotivationLetter $motivationLetter): self
+    {
+        if (!$this->motivationLetter->contains($motivationLetter)) {
+            $this->motivationLetter[] = $motivationLetter;
+            $motivationLetter->setApplication($this);  // On associe l'application à la lettre de motivation
+        }
+
+        return $this;
+    }
+
+    public function removeMotivationLetter(MotivationLetter $motivationLetter): self
+    {
+        if ($this->motivationLetter->contains($motivationLetter)) {
+            $this->motivationLetter->removeElement($motivationLetter);
+            // On supprime également la relation de l'autre côté de l'association
+            if ($motivationLetter->getApplication() === $this) {
+                $motivationLetter->setApplication(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

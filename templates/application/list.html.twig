@@ -15,19 +15,18 @@
         <table class="table table-striped table-bordered">
             <thead class="table-dark">
             <tr>
-{#                <th>ID</th>#}
-                <th>Poste</th>
-                <th>Entreprise</th>
-                <th>Lien</th>
-                <th>Date de candidature</th>
-                <th>Lettre de motivation</th>
+                <th style="width: 10%;">Poste</th>
+                <th style="width: 8%;">Entreprise</th>
+                <th style="width: 5%;">Lien</th>
+                <th style="width: 10%;">Date de candidature</th>
+                <th style="width: 25%;">Prompt pour créer une lettre de motivation</th>
+                <th style="width: 20%;">Lettre générée</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             {% for application in applications %}
                 <tr>
-{#                    <td>{{ application.id }}</td>#}
                     <td>{{ application.jobTitle }}</td>
                     <td>{{ application.companyName }}</td>
                     <td>
@@ -39,13 +38,46 @@
                     </td>
                     <td>{{ application.applicationDate|date('d/m/Y') }}</td>
                     <td>
-                        {{ application.coverLetter }}
+                        {% if application.motivationLetter is not empty %}
+                            <a class="btn btn-primary mb-3" data-bs-toggle="collapse" href="#prompt-{{ application.id }}" role="button" aria-expanded="false" aria-controls="prompt">
+                                Afficher le prompt
+                            </a>
+                            {% for motivation in application.motivationLetter %}
+                                <div class="collapse" id="prompt-{{ application.id }}">
+                                    <button class="btn btn-sm btn-outline-secondary mt-2" data-prompt="{{ motivation.prompt }}" onclick="copyText(this)">Copier le prompt</button>
+                                    <div style="font-size: 10px">
+                                        {{ motivation.prompt|nl2br }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            -
+                        {% endif %}
                     </td>
                     <td>
-{#                        <a href="{{ path('application_show', {'id': application.id}) }}" class="btn btn-sm btn-outline-secondary">Voir</a>#}
+                        {% set motivationLetter = application.motivationLetter %}
+                        {% if motivationLetter is not empty and motivationLetter[0].content is not null %}
+                            <a class="btn btn-primary" data-bs-toggle="collapse" href="#lettercontent-{{ application.id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                Afficher la lettre
+                            </a>
+                            {% for motivation in application.motivationLetter %}
+                                <div class="collapse" id="lettercontent-{{ application.id }}">
+                                    <button class="btn btn-sm btn-outline-secondary mt-2" data-content="{{ motivation.content }}" onclick="copyText(this)">Copier la lettre</button>
+                                    <div class="card card-body" style="font-size: 10px">
+                                        {{ motivation.content|nl2br }}
+                                    </div>
+                                    <!-- Bouton Copier -->
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
                         <a href="{{ path('application_edit', {'id': application.id}) }}" class="btn btn-sm btn-outline-primary">Modifier</a>
                         <a href="{{ path('application_delete', {'id': application.id}) }}" class="btn btn-sm btn-outline-danger">Supprimer</a>
-                        {# Tu peux ajouter une action supprimer ici si tu veux #}
+                        <a href="{{ path('motivation_letter_reload_prompt', {'id': application.id}) }}" class="btn btn-sm btn-outline-success">Recharger le prompt</a>
+                        <a href="{{ path('motivation_letter_edit', {'id': application.id}) }}" class="btn btn-sm btn-outline-success">Ajouter une lettre de motivation</a>
                     </td>
                 </tr>
             {% else %}
@@ -56,4 +88,23 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        // Fonction de copie
+        function copyText(button) {
+            // Récupérer le texte depuis l'attribut data-* du bouton
+            var text = button.getAttribute('data-prompt') || button.getAttribute('data-content');
+
+            // Créer un élément de texte temporaire
+            var tempInput = document.createElement('input');
+            document.body.appendChild(tempInput);
+            tempInput.value = text;
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // Alerte de confirmation
+            alert("Texte copié !");
+        }
+    </script>
 {% endblock %}

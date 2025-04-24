@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}Créer une lettre de motivation pour une candidature{% endblock %}
+
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4">📋 Créer une lettre de motivation pour une candidature</h1>
+    {{ form_start(form) }}
+    {{ form_row(form.content) }}
+    {{ form_row(form.application) }}
+    <button class="btn btn-primary">Enregistrer</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
