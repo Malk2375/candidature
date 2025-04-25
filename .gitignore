@@ -28,3 +28,4 @@
 .env.test
 .env.local
 /migrations/
+/.idea/

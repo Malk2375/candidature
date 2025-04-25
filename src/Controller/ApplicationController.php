@@ -91,22 +91,29 @@ class ApplicationController extends AbstractController
     {
         $application = new Application();
         $form = $this->createForm(ApplicationType::class, $application);
-        $prompt = MotivationLetter::PROMPT_MOTIVATION_LETTER_TEMPLATE;
+        $promptMotivationLetter = MotivationLetter::PROMPT_MOTIVATION_LETTER_TEMPLATE;
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Création de la lettre de motivation
             $motivationLetter = new MotivationLetter();
-
+            if ($application->getApplicationDate() === null) {
+                $application->setApplicationDate(new \DateTimeImmutable()); // Date actuelle
+            }
             // Remplacer les placeholders dans le template de la lettre de motivation
-            $prompt = str_replace(
+            $promptMotivationLetter = str_replace(
                 ['{{JOB_TITLE}}', '{{COMPANY_NAME}}', '{{JOB_DESCRIPTION}}'],
                 [$application->getJobTitle(), $application->getCompanyName(), $application->getJobDescription()],
-                $prompt
+                $promptMotivationLetter
             );
-
+            $promptCv = str_replace(
+                ['{{JOB_TITLE}}', '{{JOB_DESCRIPTION}}'],
+                [$application->getJobTitle(), $application->getJobDescription()],
+                MotivationLetter::PROMPT_CV_CREATION
+            );
+            $motivationLetter->setPromptCv($promptCv);
             // Set the prompt (lettre de motivation) dans l'entité MotivationLetter
-            $motivationLetter->setPrompt($prompt);
+            $motivationLetter->setPromptMotivationLetter($promptMotivationLetter);
             $motivationLetter->setApplication($application);
 
             // Ajouter la lettre de motivation à l'application
@@ -165,7 +172,7 @@ class ApplicationController extends AbstractController
         if (!$application instanceof Application) {
             throw new NotFoundHttpException('Candidature not found');
         }
-        $prompt = str_replace(
+        $promptMotivationLetter = str_replace(
             ['{{JOB_TITLE}}', '{{COMPANY_NAME}}', '{{JOB_DESCRIPTION}}'],
             [$application->getJobTitle(), $application->getCompanyName(), $application->getJobDescription()],
             MotivationLetter::PROMPT_MOTIVATION_LETTER_TEMPLATE
@@ -173,15 +180,64 @@ class ApplicationController extends AbstractController
 
         // Set the prompt (lettre de motivation) dans l'entité MotivationLetter
         $motivationLetter = $application->getMotivationLetter()->first();
-        $motivationLetter->setPrompt($prompt);
+        $motivationLetter->setPromptMotivationLetter($promptMotivationLetter);
         $motivationLetter->setApplication($application);
 
         $this->em->persist($motivationLetter);
         $this->em->persist($application);
         $this->em->flush();
-        $this->addFlash('success', 'Prompt rechargé avec succès');
+        $this->addFlash('success', 'Prompt de lettre de motivation rechargé avec succès');
 
         // Rediriger après l'enregistrement
+        return $this->redirectToRoute('application_list');
+    }
+
+    #[Route('/cv/reload-prompt/{id}', name: 'cv_reload_prompt')]
+    public function reloadPromptCV(?Application $application): RedirectResponse
+    {
+        if (!$application instanceof Application) {
+            throw new NotFoundHttpException('Candidature not found');
+        }
+        $promptCv = str_replace(
+            ['{{JOB_TITLE}}', '{{JOB_DESCRIPTION}}'],
+            [$application->getJobTitle(), $application->getJobDescription()],
+            MotivationLetter::PROMPT_CV_CREATION
+        );
+
+        // Set the prompt (lettre de motivation) dans l'entité MotivationLetter
+        $motivationLetter = $application->getMotivationLetter()->first();
+        $motivationLetter->setPromptCv($promptCv);
+        $motivationLetter->setApplication($application);
+
+        $this->em->persist($motivationLetter);
+        $this->em->persist($application);
+        $this->em->flush();
+        $this->addFlash('success', 'Prompt de CV rechargé avec succès');
+
+        // Rediriger après l'enregistrement
+        return $this->redirectToRoute('application_list');
+    }
+
+    #[Route('/motivationLetter/{id}/delete', name: 'motivation_letter_delete')]
+    public function deleteMotivationLetter(?Application $application, EntityManagerInterface $em): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
+        // Si l'application n'existe pas, retourne une erreur 404
+        if (!$application) {
+            throw new NotFoundHttpException('Application not found');
+        }
+
+        // Suppression des lettres de motivation liées à l'application
+        foreach ($application->getMotivationLetter() as $motivationLetter) {
+            // Utilisation de la méthode removeMotivationLetter pour chaque lettre de motivation
+            $motivationLetter->setContent(null);
+            $this->em->persist($motivationLetter);
+        }
+        $em->flush();
+
+        // Message flash pour notifier l'utilisateur
+        $this->addFlash('success', 'Lettre de motivation supprimée avec succès');
+
+        // Redirection vers la liste des applications
         return $this->redirectToRoute('application_list');
     }
 }

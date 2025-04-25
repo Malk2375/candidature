@@ -16,7 +16,7 @@ class MotivationLetterType extends AbstractType
         $builder
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu de la lettre',
-                'attr' => ['placeholder' => 'Exprimez votre motivation ici...'],
+                'attr' => ['placeholder' => 'Exprimez votre motivation ici...', 'class' => 'form-control mb-4',],
                 'required' => false,
             ])
             ->add('application', EntityType::class, [
@@ -27,10 +27,19 @@ class MotivationLetterType extends AbstractType
                 'choice_label' => function ($application) {
                     return $application->getJobTitle() . ' chez ' . $application->getCompanyName();
                 },
+                'attr' => [
+                    'class' => 'form-control mb-4',
+                ]
                 // used to render a select box, check boxes or radios
                 // 'multiple' => true,
                 // 'expanded' => true,
-            ]);
+            ])
+            ->add('chatgptLink', TextareaType::class, [
+                'label' => 'Lien chatgpt',
+                'attr' => ['class' => 'form-control mb-4',],
+                'required' => false,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -3,8 +3,11 @@
 {% block title %}Liste des candidatures{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1 class="mb-4">📋 Suivi des candidatures</h1>
+    <div class="mt-4 p-3">
+        <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap;">
+         <h1 class="mb-4 mr-4">📋 Suivi des candidatures</h1>
+         <a href="https://showroom.doyoubuzz.com/ymGrRMc5mlNKhQjsewt_jw/-VZwRclj_5NpaIEWrU3n" target="_blank" class="ml-1 btn btn-primary mb-3">CV</a>
+        </div>
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">
                 {{ message }}
@@ -17,9 +20,10 @@
             <tr>
                 <th style="width: 10%;">Poste</th>
                 <th style="width: 8%;">Entreprise</th>
-                <th style="width: 5%;">Lien</th>
-                <th style="width: 10%;">Date de candidature</th>
-                <th style="width: 25%;">Prompt pour créer une lettre de motivation</th>
+                <th style="width: 3%;">Lien</th>
+                <th style="width: 5%;">Date de candidature</th>
+                <th style="width: 20%;">Prompt pour adapter le CV</th>
+                <th style="width: 20%;">Prompt pour créer une lettre de motivation</th>
                 <th style="width: 20%;">Lettre générée</th>
                 <th>Actions</th>
             </tr>
@@ -38,15 +42,35 @@
                     </td>
                     <td>{{ application.applicationDate|date('d/m/Y') }}</td>
                     <td>
+                        <a href="{{ path('cv_reload_prompt', {'id': application.id}) }}" class="btn btn-sm btn-outline-success mb-1"><i class="fa-solid fa-rotate-right"></i> Prompt</a>
+
                         {% if application.motivationLetter is not empty %}
-                            <a class="btn btn-primary mb-3" data-bs-toggle="collapse" href="#prompt-{{ application.id }}" role="button" aria-expanded="false" aria-controls="prompt">
-                                Afficher le prompt
+                            <a class="btn btn-primary mb-3" data-bs-toggle="collapse" href="#promptcv-{{ application.id }}" role="button" aria-expanded="false" aria-controls="prompt">
+                                Prompt CV
                             </a>
                             {% for motivation in application.motivationLetter %}
-                                <div class="collapse" id="prompt-{{ application.id }}">
-                                    <button class="btn btn-sm btn-outline-secondary mt-2" data-prompt="{{ motivation.prompt }}" onclick="copyText(this)">Copier le prompt</button>
+                                <div class="collapse" id="promptcv-{{ application.id }}">
+                                    <button class="btn btn-sm btn-outline-secondary mt-2" data-prompt="{{ motivation.promptCv }}" onclick="copyText(this)">Copier le prompt</button>
                                     <div style="font-size: 10px">
-                                        {{ motivation.prompt|nl2br }}
+                                        {{ motivation.promptCv|nl2br }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('motivation_letter_reload_prompt', {'id': application.id}) }}" class="btn btn-sm btn-outline-success mb-1"><i class="fa-solid fa-rotate-right"></i> Prompt</a>
+                        {% if application.motivationLetter is not empty %}
+                            <a class="btn btn-primary mb-3" data-bs-toggle="collapse" href="#promptMotivation-{{ application.id }}" role="button" aria-expanded="false" aria-controls="prompt">
+                                Prompt Lettre de motivation
+                            </a>
+                            {% for motivation in application.motivationLetter %}
+                                <div class="collapse" id="promptMotivation-{{ application.id }}">
+                                    <button class="btn btn-sm btn-outline-secondary mt-2" data-prompt="{{ motivation.promptMotivationLetter }}" onclick="copyText(this)">Copier le prompt</button>
+                                    <div style="font-size: 10px">
+                                        {{ motivation.promptMotivationLetter|nl2br }}
                                     </div>
                                 </div>
                             {% endfor %}
@@ -60,6 +84,10 @@
                             <a class="btn btn-primary" data-bs-toggle="collapse" href="#lettercontent-{{ application.id }}" role="button" aria-expanded="false" aria-controls="collapseExample">
                                 Afficher la lettre
                             </a>
+                            <a class="btn btn-danger" href="{{ path('motivation_letter_delete', {'id': application.id}) }}" role="button">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+
                             {% for motivation in application.motivationLetter %}
                                 <div class="collapse" id="lettercontent-{{ application.id }}">
                                     <button class="btn btn-sm btn-outline-secondary mt-2" data-content="{{ motivation.content }}" onclick="copyText(this)">Copier la lettre</button>
@@ -74,10 +102,19 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{{ path('application_edit', {'id': application.id}) }}" class="btn btn-sm btn-outline-primary">Modifier</a>
-                        <a href="{{ path('application_delete', {'id': application.id}) }}" class="btn btn-sm btn-outline-danger">Supprimer</a>
-                        <a href="{{ path('motivation_letter_reload_prompt', {'id': application.id}) }}" class="btn btn-sm btn-outline-success">Recharger le prompt</a>
-                        <a href="{{ path('motivation_letter_edit', {'id': application.id}) }}" class="btn btn-sm btn-outline-success">Ajouter une lettre de motivation</a>
+                        <a href="{{ path('application_edit', {'id': application.id}) }}" class="btn btn-sm btn-outline-primary mb-1"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="{{ path('application_delete', {'id': application.id}) }}" class="btn btn-sm btn-outline-danger mb-1"><i class="fa-solid fa-trash"></i></a>
+                        <a href="{{ path('motivation_letter_edit', {'id': application.id}) }}" class="btn btn-sm btn-outline-success mb-1"><i class="fa-solid fa-plus"></i> Lettre de motivation</a>
+                        {% set motivationLetter = application.motivationLetter %}
+                        {% if motivationLetter is not empty and motivationLetter[0].chatgptLink is not null %}
+                            {% for motivation in application.motivationLetter %}
+                                {% if motivation.chatgptLink is not null %}
+                                    <a target="_blank" href="{{ motivation.chatgptLink|nl2br }}" class="btn btn-sm btn-success mb-1">Lien chatgpt</a>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            -
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}

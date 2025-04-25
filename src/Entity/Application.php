@@ -84,7 +84,7 @@ class Application
         return $this->applicationDate;
     }
 
-    public function setApplicationDate(\DateTimeImmutable $applicationDate): static
+    public function setApplicationDate(?\DateTimeImmutable $applicationDate): static
     {
         $this->applicationDate = $applicationDate;
 

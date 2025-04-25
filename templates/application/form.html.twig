@@ -5,13 +5,14 @@
 
 {% block body %}
     <div class="container mt-4">
-        <h1>{{ editMode ? '✏️ Modifier la candidature' : '📥 Nouvelle candidature' }}</h1>
-
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button class="btn btn-primary mt-3">
-            {{ editMode ? 'Mettre à jour' : 'Enregistrer' }}
-        </button>
-        {{ form_end(form) }}
+        <h1 class="mb-4">{{ editMode ? '✏️ Modifier la candidature' : '📥 Nouvelle candidature' }}</h1>
+        <div style="max-width: 600px; margin: 0 auto;">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-primary mt-3">
+                {{ editMode ? 'Mettre à jour' : 'Enregistrer' }}
+            </button>
+            {{ form_end(form) }}
+        </div>
     </div>
 {% endblock %}
