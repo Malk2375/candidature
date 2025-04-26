@@ -89,6 +89,8 @@
                             </a>
 
                             {% for motivation in application.motivationLetter %}
+                                <a class="btn btn-primary" href="{{ path('motivation_letter_pdf_download', {'id': application.id}) }}" role="button"><i class="fa-solid fa-download"></i></a>
+
                                 <div class="collapse" id="lettercontent-{{ application.id }}">
                                     <button class="btn btn-sm btn-outline-secondary mt-2" data-content="{{ motivation.content }}" onclick="copyText(this)">Copier la lettre</button>
                                     <div class="card card-body" style="font-size: 10px">

@@ -7,6 +7,7 @@ use App\Entity\MotivationLetter;
 use App\Form\ApplicationType;
 use App\Form\MotivationLetterType;
 use App\Repository\ApplicationRepository;
+use App\Service\PdfService;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +27,7 @@ class ApplicationController extends AbstractController
         $this->em = $em;
     }
 
-    #[Route('/applications', name: 'application_list')]
+    #[Route('/application/list', name: 'application_list')]
     public function index(ApplicationRepository $applicationRepository): Response
     {
         $applications = $applicationRepository->findBy([], ['applicationDate' => 'DESC']);
@@ -239,5 +240,18 @@ class ApplicationController extends AbstractController
 
         // Redirection vers la liste des applications
         return $this->redirectToRoute('application_list');
+    }
+
+    #[Route(path: '/motivationLetter/pdf/download/{id}', name: 'motivation_letter_pdf_download')]
+    public function downloadPdf(PdfService $pdfService, ?Application $application): Response
+    {
+        if (!$application instanceof Application) {
+            throw new NotFoundHttpException('Candidature not found');
+        } else {
+            $content = $this->renderView('pdf/letterDeMotivationPdf.html.twig',[
+                'contenu' => $application->getMotivationLetter()->first()->getContent()
+            ]);
+            return $pdfService->getStreamResponse($content, 'Lettre de motivation - Alternant DEV - Dorbani - M1.pdf');
+        }
     }
 }

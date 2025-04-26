@@ -46,7 +46,7 @@ Contrat d’apprentissage | Durée : 12 à 24 mois | Master 1 | Rythme : 3 sem. 
 - **Stack :** Symfony (PHP), Vue.js / Jquery, MySQL, Postman, Swagger, Zapier
 
 #### **Développeur Web**
-**TRI AUTOMAI – Mai 2024 à juillet 2024 | Stage**
+**TRI AUTO – Mai 2024 à juillet 2024 | Stage**
 - Création d’un site permettant aux utilisateurs de rechercher, filtrer, commander des pièces détachées en ligne.
 - Mise en place d’un système d’administration avec EasyAdmin de Symfony.
 - **Stack :** PHP Symfony, NodeJs, ReactJs, MySQL.
@@ -132,34 +132,41 @@ Contrat d’apprentissage | Durée : 12 à 24 mois | Master 1 | Rythme : 3 sem. 
 EOT;
 
     final const PROMPT_MOTIVATION_LETTER_TEMPLATE = <<<EOT
-Bonjour, Écris une lettre de motivation pour le poste de {{JOB_TITLE}} chez {{COMPANY_NAME}} selon mon profil, démontrant dès le début ma motivation et mon enthousiasme en faisant la candidature, et la correspondance de mon profil à ce poste.
+Bonjour,  
+Écris une lettre de motivation pour le poste de **{{JOB_TITLE}}** chez **{{COMPANY_NAME}}**, démontrant dès le début mon enthousiasme et ma motivation à rejoindre leur équipe. Montre comment mon profil correspond parfaitement au poste proposé, en m’appuyant sur mes compétences techniques, mes expériences concrètes, ainsi que ma volonté de progresser dans ce domaine.
 
-Le résultat doit être un code HTML bien structuré et **compatible avec Dompdf** pour générer un fichier PDF. Utilise des balises HTML simples comme `<html>`, `<body>`, `<h1>`, `<p>`, `<br>`, et `<strong>`. Le style peut être minimal (pas besoin de CSS avancé, ni JavaScript). 
+---
 
-## Voici mon profil :
+## Mon profil :
 
-——
+Je suis **Mohamed Abdelmalek DORBANI**, actuellement en Master 1 à l’**IPSSI** en développement, intelligence artificielle et big data. Je suis à la recherche d’un **contrat d’apprentissage de 12 à 24 mois** dans le domaine du **développement Fullstack / DevOps**, avec un rythme de **3 semaines en entreprise / 1 semaine en formation**. Je suis éligible à l’aide à l’embauche de 6000 €.
 
-Je suis Abdelmalek DORBANI et je cherche un contrat d'apprentissage pour mon MASTER 1 en développement fullstack et DevOps.
-Parcours académique: " J'ai fait trois ans d'études en Algérie à l'École Supérieure en Science et Technologie de l'Informatique et du Numérique, et j'ai poursuivi ma formation avec un BAC+2 à Paris à l'École Multimédia, me spécialisant en développement web, et j’entame en septembre mon bac+3 à IPSSI en développement fullstack et devops. Je suis fort en PHP Symfony, React, et MySQL. "
+### 🛠️ **Compétences techniques**
+- **Langages & frameworks :** PHP / Symfony, React, Vue.js, Node.js, ExpressJS, MySQL, MongoDB, Firebase
+- **CI/CD, Docker, Git, Postman, Swagger, TDD, API REST**
+- **Hébergement & déploiement :** AlwaysData, OVHcloud, FTP/SSH
+- **Méthodologies :** Agile/Scrum, UML, Trello, Jira
+- **Anglais professionnel :** présentations techniques et échanges clients
 
-Mon expérience inclut un stage en tant que développeur web chez TRI AUTO, où j'ai contribué au développement d'un site permettant aux utilisateurs de rechercher, filtrer et commander des pièces détachées en ligne, ainsi que la mise en place d'un système d'administration avec EasyAdmin de Symfony.
+### 💼 **Expériences significatives**
+- **Decidento (apprentissage actuel)** : développement d’outils internes et automatisation de process entre Symfony/VueJS et divers CRM (HubSpot, Salesforce, etc.) ; intégration d’API IA (OpenAI, Perplexity) ; animation de formations clients.
+- **TRI AUTO** : développement d’un site e-commerce pour pièces détachées, back-office via EasyAdmin (Symfony).
+- **Spinalcom** : dashboard d’analyse d’occupation des bâtiments (VueJs, Swagger API).
+- **BITCHEST** : site d’achat/vente de cryptomonnaies fictives, déployé sur AlwaysData.
+- **Autres projets** : Webdocumentaire interactif en React/Firebase/FramerMotion.
 
-J'ai également fais une interface d'analyse d'occupation des pièces par étage pour chaque bâtiment en utilisant VueJs, Swagger API et Scss Spinalcom.
+🎯 Mes projets et travaux sont visibles sur mon portfolio : [https://portfolio-malk.vercel.app/](https://portfolio-malk.vercel.app/)
 
-Dans le cadre de ma formation, j'ai développé : Bitchest, un site permettant d'acheter et de vendre des cryptomonnaies virtuelles. J'ai développé un webdocumentaire en React, Firebase, et FramerMotion, qui parle des combats des judokas français dans les JO.
-
-——
+---
 
 ## Voici la fiche de poste :
 
-——
-
 {{JOB_DESCRIPTION}}
 
-——
+---
 
-En mettant en avant mes compétences et expériences mentionnées, et en expliquant pourquoi je serais un atout pour leur équipe. Voici le lien vers mon portfolio : https://portfolio-malk.vercel.app/, où l'on trouve toutes les informations, les projets et les liens vers mes réseaux.
+Génère une lettre de motivation adaptée à ce profil, en démontrant en quoi je suis un excellent candidat pour ce poste et en valorisant mes expériences et mes compétences mentionnées ci-dessus.
+---
 EOT;
 
     #[ORM\Id]
