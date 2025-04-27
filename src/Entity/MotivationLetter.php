@@ -92,7 +92,7 @@ Contrat d’apprentissage | Durée : 12 à 24 mois | Master 1 | Rythme : 3 sem. 
 - **ExpressJS** – Bon niveau
 
 #### **Bases de données, Cloud et Hébergement**
-- **MySQL, MongoDB** – Expert
+- **MySQL/MariaDB, MongoDB** – Expert
 - **Google Firebase** – Intermédiaire
 - **TDD, CI/CD** – Bon niveau
 - **OVHcloud, Alwaysdata, Protocole FTP, SSH** – Expert
