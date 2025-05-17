@@ -4,12 +4,18 @@
 
 {% block body %}
 <div class="container mt-4">
-    <h1 class="mb-4">📋 Créer une lettre de motivation pour une candidature</h1>
-    <div style="max-width: 600px; margin: 0 auto;">
+    <h1 class="mb-5">📋 Créer une lettre de motivation pour une candidature</h1>
+    <div style="margin: 0 auto;">
         {{ form_start(form) }}
-        {{ form_row(form.content) }}
-        {{ form_row(form.application) }}
-        {{ form_row(form.chatgptLink) }}
+        <div style="display: flex;">
+            <div style="width: 60%; margin-right: 20px">
+                {{ form_row(form.content) }}
+            </div>
+            <div style="width: 30%;">
+                {{ form_row(form.application) }}
+                {{ form_row(form.chatgptLink) }}
+            </div>
+        </div>
         <button class="btn btn-primary">Enregistrer</button>
         {{ form_end(form) }}
     </div>

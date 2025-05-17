@@ -21,23 +21,35 @@ use Symfony\Component\Routing\Attribute\Route;
     {
         $this->em = $em;
     }
-    
+    #[Route('/motivation-letter/edit/{id}', name: 'motivation_letter_edit')]
     public function editMotivationLetter(?Application $application, Request $request): Response
     {
-        $motivationLetter = $application->getMotivationLetter()->first();
-        $form = $this->createForm(MotivationLetterType::class, $motivationLetter);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $motivationLetter->setContent($form->getData()->getContent());
-            $this->em->persist($motivationLetter);
-            $this->em->flush();
-
-            $this->addFlash('success', 'Lettre de motivation enregistrée avec succès.');
-
+        // Vérifie si l'application existe et a une lettre de motivation
+        if (!$application || !$application->getMotivationLetter()->count()) {
+            $this->addFlash('error', 'Aucune lettre de motivation trouvée pour cette candidature.');
             return $this->redirectToRoute('application_list'); // ou une autre route appropriée
         }
 
+        // Récupère la première lettre de motivation
+        $motivationLetter = $application->getMotivationLetter()->first();
+
+        // Crée le formulaire basé sur l'entité MotivationLetter
+        $form = $this->createForm(MotivationLetterType::class, $motivationLetter);
+        $form->handleRequest($request);
+
+        // Si le formulaire est soumis et valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            // L'entité est déjà persistée, il suffit de faire un flush
+            $this->em->flush();
+
+            // Message flash de succès
+            $this->addFlash('success', 'Lettre de motivation enregistrée avec succès.');
+
+            // Redirige vers une autre route
+            return $this->redirectToRoute('application_list'); // ou une autre route appropriée
+        }
+
+        // Rendu du formulaire si ce n'est pas encore soumis ou validé
         return $this->render('motivationLetter/new.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -90,6 +102,36 @@ use Symfony\Component\Routing\Attribute\Route;
         $this->em->persist($application);
         $this->em->flush();
         $this->addFlash('success', 'Prompt de CV rechargé avec succès');
+
+        // Rediriger après l'enregistrement
+        return $this->redirectToRoute('application_list');
+    }
+    #[Route('/motivation-letter/entretien/reload-prompt/{id}', name: 'entretien_reload_prompt')]
+    public function reloadPromptEntretien(?Application $application): RedirectResponse
+    {
+        if (!$application instanceof Application) {
+            throw new NotFoundHttpException('Candidature not found');
+        }
+        $jobDescription = $application->getJobDescription() !== null ? $application->getJobDescription() : '';
+        $companyInfo = $application->getCompanyInfo() !== null ? $application->getCompanyInfo() : '';
+        $profile = MotivationLetter::PROFILE !== null ? MotivationLetter::PROFILE : '';
+        $companyName = $application->getCompanyName() !== null ? $application->getCompanyName() : '';
+
+        $promptEntretien = str_replace(
+            ['{{JOB_DESCRIPTION}}', '{{COMPANY_INFO}}', '{{PROFILE}}', '{{COMPANY_NAME}}'],
+            [$jobDescription, $companyInfo, $profile, $companyName],
+            MotivationLetter::PROMPT_INTERVIEW_PREPARATION
+        );
+
+        // Set the prompt (lettre de motivation) dans l'entité MotivationLetter
+        $motivationLetter = $application->getMotivationLetter()->first();
+        $motivationLetter->setPromptEntretien($promptEntretien);
+        $motivationLetter->setApplication($application);
+
+        $this->em->persist($motivationLetter);
+        $this->em->persist($application);
+        $this->em->flush();
+        $this->addFlash('success', 'Prompt d\'entretien rechargé avec succès');
 
         // Rediriger après l'enregistrement
         return $this->redirectToRoute('application_list');

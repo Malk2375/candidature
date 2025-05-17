@@ -27,16 +27,25 @@ class ApplicationController extends AbstractController
     }
 
 
-    #[Route('/application/list', name: 'application_list')]
+    #[Route('/', name: 'application_list')]
     public function index(ApplicationRepository $applicationRepository): Response
     {
         $applications = $applicationRepository->findBy([], ['applicationDate' => 'DESC']);
+        $nbApplicationsOfTheDay = 0;
+        $today = new \DateTimeImmutable('today');
+
+        foreach ($applications as $application) {
+            if ($application->getApplicationDate()->format('Y-m-d') === $today->format('Y-m-d')) {
+                $nbApplicationsOfTheDay++;
+            }
+        }
 
         return $this->render('application/list.html.twig', [
             'applications' => $applications,
+            'nbApplicationsOfTheDay' => $nbApplicationsOfTheDay
         ]);
     }
-    #[Route('/api/application/list', name: 'api_application_list')]
+    #[Route('/api/application/list', name: 'api_application_list', methods: ['GET'])]
     public function apiIndex(ApplicationRepository $applicationRepository): JsonResponse
     {
         $applications = $applicationRepository->findBy([], ['applicationDate' => 'DESC']);
@@ -194,9 +203,11 @@ class ApplicationController extends AbstractController
                 [$application->getJobTitle(), $application->getJobDescription()],
                 MotivationLetter::PROMPT_CV_CREATION
             );
+
             $motivationLetter->setPromptCv($promptCv);
             // Set the prompt (lettre de motivation) dans l'entité MotivationLetter
             $motivationLetter->setPromptMotivationLetter($promptMotivationLetter);
+
             $motivationLetter->setApplication($application);
 
             // Ajouter la lettre de motivation à l'application

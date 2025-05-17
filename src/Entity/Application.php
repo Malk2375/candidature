@@ -30,6 +30,8 @@ class Application
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $jobDescription = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $companyInfo = null;
 
     #[ORM\OneToMany(targetEntity: MotivationLetter::class, mappedBy: 'application')]
     private Collection $motivationLetter;
@@ -99,6 +101,17 @@ class Application
     public function setJobDescription(?string $jobDescription): static
     {
         $this->jobDescription = $jobDescription;
+
+        return $this;
+    }
+    public function getCompanyInfo(): ?string
+    {
+        return $this->companyInfo;
+    }
+
+    public function setCompanyInfo(?string $companyInfo): static
+    {
+        $this->companyInfo = $companyInfo;
 
         return $this;
     }

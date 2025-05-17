@@ -6,9 +6,22 @@
 {% block body %}
     <div class="container mt-4">
         <h1 class="mb-4">{{ editMode ? '✏️ Modifier la candidature' : '📥 Nouvelle candidature' }}</h1>
-        <div style="max-width: 600px; margin: 0 auto;">
+        <div style="margin: 0 auto;">
             {{ form_start(form) }}
-            {{ form_widget(form) }}
+            <div style="display: flex">
+                <div style="width: 30%; margin-right: 30px">
+                    {{ form_row(form.jobTitle) }}
+                    {{ form_row(form.companyName) }}
+                    {{ form_row(form.jobLink) }}
+                    {{ form_row(form.applicationDate) }}
+                </div>
+                <div style="width: 40%;margin-right: 30px">
+                    {{ form_row(form.jobDescription) }}
+                </div>
+                <div style="width: 30%">
+                    {{ form_row(form.companyInfo) }}
+                </div>
+            </div>
             <button class="btn btn-primary mt-3">
                 {{ editMode ? 'Mettre à jour' : 'Enregistrer' }}
             </button>

@@ -16,31 +16,43 @@ class ApplicationType extends AbstractType
     {
         $builder
             ->add('jobTitle', TextType::class, [
-                'label' => 'Intitulé du poste',
-//                'required' => false,
+                'label' => '<h2>Intitulé du poste</h2>',
+                'label_html' => true,
                 'attr' => [
                     'class' => 'form-control mb-4',
                 ]
             ])
             ->add('companyName', TextType::class, [
-                'label' => 'L\'entreprise',
-//                'required' => false,
+                'label' => '<h2>L\'entreprise</h2>',
+                'label_html' => true,
                 'attr' => [
                     'class' => 'form-control mb-4',
                 ]
             ])
+            ->add('companyInfo', TextareaType::class, [
+                'label' => '<h2>INFO Entreprise</h2>',
+                'label_html' => true,
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control mb-4',
+                    'rows' => 16,
+                ]
+            ])
             ->add('jobLink', TextType::class, [
-                'label' => 'Lien de l\'offre',
+                'label' => '<h2>Lien de l\'offre</h2>',
+                'label_html' => true,
                 'required' => false,
                 'attr' => [
                     'class' => 'form-control mb-4',
                 ]
             ])
             ->add('jobDescription', TextareaType::class, [
-                'label' => 'Description du poste',
+                'label' => '<h2>Description du poste</h2>',
+                'label_html' => true,
 //                'required' => false,
                 'attr' => [
-                    'class' => 'form-control mb-4',
+                    'class' => 'form-control mb-4 ',
+                    'rows' => 16,
                 ]
             ])
             ->add('applicationDate', null, [
