@@ -22,7 +22,7 @@ class Application
     #[ORM\Column(length: 255)]
     private ?string $companyName = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $jobLink = null;
 
     #[ORM\Column]
