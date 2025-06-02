@@ -134,15 +134,12 @@ EOT;
     final const PROMPT_MOTIVATION_LETTER_TEMPLATE = <<<EOT
 Écris une lettre de motivation pour le poste de {{JOB_TITLE}} chez {{COMPANY_NAME}}.
 Commence par exprimer clairement mon enthousiasme et ma motivation à rejoindre leur équipe.
-Montre en quoi mon profil correspond au poste proposé, en mettant en avant mes compétences techniques, mon expérience en entreprise (notamment mon alternance chez DECIDENTO), mes projets pédagogiques, et ma volonté d'évoluer dans le développement fullstack et DevOps.
+Montre en quoi mon profil correspond au poste proposé, en mettant en avant mes compétences techniques, mon expérience en entreprise (notamment mon alternance chez DECIDENTO), mon parcours académique, mes projets pédagogiques, et ma volonté d'évoluer dans le développement fullstack et DevOps.
 
 ---
 
 **Informations personnelles :**
-Nom : Abdelmalek DORBANI
-Email : [m.abdelmalek.dorbani@gmail.com](mailto:m.abdelmalek.dorbani@gmail.com)
-Téléphone : 07 58 66 35 61
-Portfolio : [https://portfolio-malk.vercel.app/](https://portfolio-malk.vercel.app/)
+Nom et prénom : Abdelmalek DORBANI
 
 ---
 
@@ -159,6 +156,22 @@ Je suis à la recherche d’un **contrat d’apprentissage de 12 à 24 mois**, p
 * DevOps & outils : Git, Docker, CI/CD, Swagger, Postman, TDD (PHPUnit, JS), OVHcloud, Alwaysdata
 * Méthodologies : Agile/Scrum, UML2, gestion de projet avec Trello/Jira
 * Anglais professionnel : échanges techniques, support et formation client
+
+---
+
+**Parcours académique :**
+
+* **L3 – Développement fullstack & DevOps**
+  *IPSSI – Octobre 2024 à septembre 2025*
+  Technologies : JavaScript ECMA6, Angular, Symfony PHP8, Git/GitHub, Docker, Node.js, Python, PL/SQL, ReactJS, CI/CD, UML2, Tests unitaires, UX/UI Design
+
+* **L2 – Développement Web**
+  *L'École Multimédia – Octobre 2023 à juin 2024*
+  Compétences développées : React, Node.js, Symfony, gestion de projet Agile (SCRUM), UX/UI, développement mobile (React Native), DevOps (Docker, CI/CD), tests unitaires
+
+* **Cycle Préparatoire en Informatique (L1 & L2)**
+  *École Supérieure des Sciences et Technologies du Numérique – 2021 à 2023*
+  Fondamentaux : mathématiques, algorithmique, architecture des ordinateurs, systèmes d’exploitation, Linux
 
 ---
 
