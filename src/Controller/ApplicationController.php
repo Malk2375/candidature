@@ -28,20 +28,23 @@ class ApplicationController extends AbstractController
 
 
     #[Route('/', name: 'application_list')]
-    public function index(ApplicationRepository $applicationRepository): Response
+    public function index(Request $request, ApplicationRepository $applicationRepository): Response
     {
-        $applications = $applicationRepository->findBy([], ['applicationDate' => 'DESC']);
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $applicationRepository->getApplicationPaginator($offset);
         $nbApplicationsOfTheDay = 0;
         $today = new \DateTimeImmutable('today');
 
-        foreach ($applications as $application) {
+        foreach ($paginator as $application) {
             if ($application->getApplicationDate()->format('Y-m-d') === $today->format('Y-m-d')) {
                 $nbApplicationsOfTheDay++;
             }
         }
 
         return $this->render('application/list.html.twig', [
-            'applications' => $applications,
+            'applications' => $paginator,
+            'previous' => $offset - ApplicationRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + ApplicationRepository::PAGINATOR_PER_PAGE),
             'nbApplicationsOfTheDay' => $nbApplicationsOfTheDay
         ]);
     }
